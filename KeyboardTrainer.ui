@@ -19,7 +19,7 @@
      <rect>
       <x>330</x>
       <y>30</y>
-      <width>81</width>
+      <width>91</width>
       <height>31</height>
      </rect>
     </property>
@@ -32,7 +32,7 @@
      <rect>
       <x>210</x>
       <y>30</y>
-      <width>81</width>
+      <width>91</width>
       <height>31</height>
      </rect>
     </property>
@@ -45,7 +45,7 @@
      <rect>
       <x>410</x>
       <y>30</y>
-      <width>81</width>
+      <width>101</width>
       <height>31</height>
      </rect>
     </property>
@@ -53,7 +53,7 @@
      <string>progress</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="inputField">
+   <widget class="MyLineEdit" name="inputField">
     <property name="geometry">
      <rect>
       <x>270</x>
@@ -86,7 +86,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>reference</string>
+     <string>CurrentText</string>
     </property>
    </widget>
    <widget class="QComboBox" name="difficultyComboBox">
@@ -127,6 +127,14 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MyLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>MyLineEdit.h
+</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

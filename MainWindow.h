@@ -1,9 +1,9 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
-#include "User.h"
+#include <QTimer>
 #include "Trainer.h"
+#include "User.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class KeyboardTrainer; }
@@ -11,23 +11,25 @@ QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
+
 public:
-    MainWindow(QWidget* parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
     void onStartTraining();
-    void onTrainingFinished(int charactersTyped, int timeSpent, int errorCount);
     void onCharacterInput();
-
-private:
-    Ui::KeyboardTrainer* ui;
-    User* user;
-    Trainer* trainer;
-
-    void initUI();
+    void onTrainingFinished(int charactersTyped, int timeSpent, int errorCount);
     void updateStatus();
     void updateHighlightedReference();
-};
 
-#endif // MAINWINDOW_H
+private:
+    void initUI();
+    void updateStatusBar();
+
+    Ui::KeyboardTrainer *ui;
+    Trainer* trainer;
+    User* user;
+    QTimer* statusUpdateTimer;
+    bool timerStarted;
+};

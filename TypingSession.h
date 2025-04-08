@@ -5,6 +5,7 @@
 #include <QElapsedTimer>
 #include <QString>
 
+
 class TypingSession {
 public:
     TypingSession(const Level& level);

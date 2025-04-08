@@ -1,4 +1,6 @@
 #include "TypingSession.h"
+#include <algorithm>
+
 
 TypingSession::TypingSession(const Level& level)
     : level(level), errors(0), totalChars(0) {}
@@ -20,7 +22,8 @@ bool TypingSession::processInput(const QString& input) {
         }
     }
 
-    totalChars = input.length();
+    totalChars = std::max(totalChars, static_cast<int>(input.length()));
+
 
     return input == targetText;
 }

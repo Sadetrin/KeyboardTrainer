@@ -3,6 +3,8 @@
 #include <QInputDialog>
 #include <QPalette>
 #include <QTimer>
+#include <QDir>
+#include <QFileInfoList>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
@@ -13,10 +15,37 @@ MainWindow::MainWindow(QWidget* parent)
 {
     ui->setupUi(this);
 
-    QString username = QInputDialog::getText(this, "Введите имя пользователя", "Имя:");
-    if (username.isEmpty()) username = "user";
-    user = new User(username);
+    QString username;
 
+    QStringList userFiles;
+    QDir userDir("users");
+    if (!userDir.exists()) {
+        QDir().mkdir("users");
+    }
+
+    QFileInfoList fileList = userDir.entryInfoList(QStringList() << "*.dat", QDir::Files);
+    for (const QFileInfo& fileInfo : fileList) {
+        userFiles << fileInfo.baseName();
+    }
+
+
+    QStringList options;
+    options << "Создать нового пользователя";
+    options << userFiles;
+
+    bool ok;
+    QString selected = QInputDialog::getItem(this, "Выбор пользователя", "Выберите пользователя:", options, 0, false, &ok);
+
+    if (ok && selected == "Создать нового пользователя") {
+        username = QInputDialog::getText(this, "Новый пользователь", "Введите имя:");
+        if (username.isEmpty()) username = "user";
+    } else if (ok) {
+        username = selected;
+    } else {
+        username = "user";
+    }
+
+    user = new User(username);
     initUI();
 }
 
@@ -86,33 +115,59 @@ void MainWindow::onStartTraining() {
     updateStatus();
     updateStatusBar();
     updateHighlightedReference();
+    lastValidInput.clear();
+
 }
 
 void MainWindow::onCharacterInput() {
     if (!trainer) return;
 
     QString input = ui->inputField->text();
+    QString target = trainer->getCurrentText();
+    QPalette palette = ui->inputField->palette();
+
+    bool hasError = false;
+
+    // Проверка посимвольно, где начинается первая ошибка
+    for (int i = 0; i < input.length(); ++i) {
+        if (i >= target.length() || input[i] != target[i]) {
+            hasError = true;
+            break;
+        }
+    }
+
+    if (hasError) {
+        inputBlocked = true;
+        palette.setColor(QPalette::Base, QColor(255, 200, 200)); // розовый фон
+    } else {
+        inputBlocked = false;
+        lastValidInput = input;
+        palette.setColor(QPalette::Base, QColor(255, 255, 255)); // белый фон
+    }
+
+    ui->inputField->setPalette(palette);
+
+    // Блокируем ввод вручную, если ошибка и пользователь пытается продолжать
+    if (inputBlocked && input.length() > lastValidInput.length()) {
+        ui->inputField->blockSignals(true);
+        ui->inputField->setText(input.left(lastValidInput.length() + 1)); // показываем ошибку, но не даем вводить дальше
+        ui->inputField->blockSignals(false);
+    }
+
+    trainer->updateUserInput(input);
+
     if (!timerStarted && !input.isEmpty()) {
         statusUpdateTimer->start(100);
         trainer->startElapsedTimer();
         timerStarted = true;
     }
 
-    trainer->updateUserInput(input);
-
-    QString target = trainer->getCurrentText();
-    QPalette palette = ui->inputField->palette();
-
-    if (input.length() > 0 && input.length() <= target.length()) {
-        palette.setColor(QPalette::Base, (input.back() != target[input.length() - 1]) ? QColor(255, 200, 200) : QColor(255, 255, 255));
-    } else {
-        palette.setColor(QPalette::Base, QColor(255, 255, 255));
-    }
-    ui->inputField->setPalette(palette);
-
     updateStatus();
     updateHighlightedReference();
 }
+
+
+
 
 void MainWindow::onTrainingFinished(int charactersTyped, int timeSpent, int errorCount) {
     ui->inputField->setEnabled(false);

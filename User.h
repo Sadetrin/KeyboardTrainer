@@ -21,7 +21,7 @@ private:
     double averageSpeed;
 
     QString getFilePath() const;
+    static QString getUsersDirectory();
 };
 
-
-#endif // !USER_H
+#endif // USER_H

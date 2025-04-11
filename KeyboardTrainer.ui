@@ -43,7 +43,7 @@
    <widget class="QLabel" name="progressLabel">
     <property name="geometry">
      <rect>
-      <x>410</x>
+      <x>450</x>
       <y>30</y>
       <width>101</width>
       <height>31</height>
@@ -56,17 +56,17 @@
    <widget class="MyLineEdit" name="inputField">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>200</x>
       <y>140</y>
-      <width>191</width>
-      <height>24</height>
+      <width>401</width>
+      <height>31</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="startButton">
     <property name="geometry">
      <rect>
-      <x>330</x>
+      <x>340</x>
       <y>190</y>
       <width>80</width>
       <height>24</height>
@@ -86,14 +86,14 @@
      </rect>
     </property>
     <property name="text">
-     <string>CurrentText</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Здесь будет текст&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QComboBox" name="difficultyComboBox">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>40</y>
+      <x>670</x>
+      <y>20</y>
       <width>121</width>
       <height>41</height>
      </rect>
@@ -115,6 +115,7 @@
     </item>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -125,7 +126,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <customwidgets>
   <customwidget>

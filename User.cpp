@@ -1,8 +1,10 @@
 #include "User.h"
 #include <QFile>
 #include <QTextStream>
+#include <QDir>
 
 User::User(const QString& username) : username(username), completedLevels(0), averageSpeed(0.0) {
+    QDir().mkpath(getUsersDirectory()); // Создание папки users, если не существует
     loadFromFile();
 }
 
@@ -49,5 +51,9 @@ bool User::loadFromFile() {
 }
 
 QString User::getFilePath() const {
-    return username + ".dat";
+    return getUsersDirectory() + "/" + username + ".dat";
+}
+
+QString User::getUsersDirectory() {
+    return "users";
 }

@@ -1,7 +1,7 @@
-#pragma once
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTimer>
 #include "Trainer.h"
 #include "User.h"
 
@@ -13,23 +13,28 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
 private slots:
     void onStartTraining();
     void onCharacterInput();
     void onTrainingFinished(int charactersTyped, int timeSpent, int errorCount);
-    void updateStatus();
-    void updateHighlightedReference();
 
 private:
-    void initUI();
-    void updateStatusBar();
-
-    Ui::KeyboardTrainer *ui;
+    Ui::KeyboardTrainer* ui;
     Trainer* trainer;
     User* user;
     QTimer* statusUpdateTimer;
     bool timerStarted;
+
+    void initUI();
+    void updateStatus();
+    void updateStatusBar();
+    void updateHighlightedReference();
+    QString lastValidInput;  // Последняя корректная строка
+    bool inputBlocked = false;
+
 };
+
+#endif // MAINWINDOW_H

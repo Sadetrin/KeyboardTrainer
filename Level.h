@@ -6,9 +6,11 @@
 class Level {
 public:
     enum Difficulty {
+        VeryEasy,
         Easy,
         Medium,
-        Hard
+        Hard,
+        VeryHard
     };
 
     static QString getTextForDifficulty(Difficulty difficulty);

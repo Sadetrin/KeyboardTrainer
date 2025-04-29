@@ -6,17 +6,15 @@
 class Level {
 public:
     enum Difficulty {
-        VeryEasy,
-        Easy,
-        Medium,
-        Hard,
-        VeryHard
+        VeryEasy,   // Буквы
+        Easy,       // Слова
+        Medium,     // Предложение
+        Hard        // Два или три предложения
     };
 
-    static QString getTextForDifficulty(Difficulty difficulty);
+    explicit Level(Difficulty difficulty);
     QString getText() const;
-
-    Level(Difficulty difficulty);
+    static QString getTextForDifficulty(Difficulty difficulty);
 
 private:
     QString text;

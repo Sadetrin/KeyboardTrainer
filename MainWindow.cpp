@@ -60,12 +60,20 @@ void MainWindow::initUI() {
     connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::onStartTraining);
     connect(ui->inputField, &QLineEdit::textChanged, this, &MainWindow::onCharacterInput);
 
+    // Заполнение уровней сложности
+    ui->difficultyComboBox->clear();
+    ui->difficultyComboBox->addItem("Очень легко"); // VeryEasy
+    ui->difficultyComboBox->addItem("Легко");       // Easy
+    ui->difficultyComboBox->addItem("Средне");      // Medium
+    ui->difficultyComboBox->addItem("Сложно");      // Hard
+
     statusUpdateTimer = new QTimer(this);
     connect(statusUpdateTimer, &QTimer::timeout, this, &MainWindow::updateStatus);
 
     updateStatusBar();
     updateStatus();
 }
+
 
 void MainWindow::updateStatus() {
     if (trainer) {
@@ -98,9 +106,11 @@ void MainWindow::onStartTraining() {
 
     Level::Difficulty difficulty = Level::Medium;
     QString levelText = ui->difficultyComboBox->currentText();
-    if (levelText == "Easy") difficulty = Level::Easy;
-    else if (levelText == "Medium") difficulty = Level::Medium;
-    else if (levelText == "Hard") difficulty = Level::Hard;
+
+    if (levelText == "Очень легко") difficulty = Level::VeryEasy;
+    else if (levelText == "Легко") difficulty = Level::Easy;
+    else if (levelText == "Средне") difficulty = Level::Medium;
+    else if (levelText == "Сложно") difficulty = Level::Hard;
 
     trainer->startTraining(difficulty);
     connect(trainer, &Trainer::trainingFinished, this, &MainWindow::onTrainingFinished);
@@ -116,8 +126,8 @@ void MainWindow::onStartTraining() {
     updateStatusBar();
     updateHighlightedReference();
     lastValidInput.clear();
-
 }
+
 
 void MainWindow::onCharacterInput() {
     if (!trainer) return;

@@ -56,9 +56,9 @@
    <widget class="MyLineEdit" name="inputField">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>20</x>
       <y>140</y>
-      <width>401</width>
+      <width>751</width>
       <height>31</height>
      </rect>
     </property>
@@ -79,9 +79,9 @@
    <widget class="QLabel" name="referenceLabel">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>20</x>
       <y>100</y>
-      <width>391</width>
+      <width>751</width>
       <height>21</height>
      </rect>
     </property>
@@ -100,17 +100,22 @@
     </property>
     <item>
      <property name="text">
-      <string>Easy</string>
+      <string>Очень легко</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Medium</string>
+      <string>Легко</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Hard</string>
+      <string>Средне</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Сложно</string>
      </property>
     </item>
    </widget>

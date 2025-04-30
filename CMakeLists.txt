@@ -36,6 +36,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MainWindow.h MainWindow.cpp
         words
         MyLineEdit.h MyLineEdit.cpp
+        Records.h Records.cpp
+        RecordsWindow.h RecordsWindow.cpp
+        recordswindow.h recordswindow.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET KeyboardTrainer APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

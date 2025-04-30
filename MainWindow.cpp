@@ -1,10 +1,14 @@
 #include "MainWindow.h"
 #include "ui_KeyboardTrainer.h"
+#include "Records.h"
 #include <QInputDialog>
 #include <QPalette>
 #include <QTimer>
 #include <QDir>
 #include <QFileInfoList>
+#include <QMessageBox>
+#include "recordswindow.h"
+
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
@@ -22,28 +26,55 @@ MainWindow::MainWindow(QWidget* parent)
     if (!userDir.exists()) {
         QDir().mkdir("users");
     }
-
     QFileInfoList fileList = userDir.entryInfoList(QStringList() << "*.dat", QDir::Files);
     for (const QFileInfo& fileInfo : fileList) {
         userFiles << fileInfo.baseName();
     }
 
-
     QStringList options;
     options << "Создать нового пользователя";
     options << userFiles;
 
-    bool ok;
-    QString selected = QInputDialog::getItem(this, "Выбор пользователя", "Выберите пользователя:", options, 0, false, &ok);
+    bool userSelected = false;
+    while (!userSelected) {
+        bool ok;
+        QString selected = QInputDialog::getItem(this, "Выбор пользователя", "Выберите пользователя:", options, 0, false, &ok);
 
-    if (ok && selected == "Создать нового пользователя") {
-        username = QInputDialog::getText(this, "Новый пользователь", "Введите имя:");
-        if (username.isEmpty()) username = "user";
-    } else if (ok) {
-        username = selected;
-    } else {
-        username = "user";
+        if (!ok) {
+            QApplication::quit();
+            return; // Прерываем конструктор MainWindow
+        }
+
+        if (selected == "Создать нового пользователя") {
+            QString newName;
+            bool nameOk;
+            while (true) {
+                newName = QInputDialog::getText(this, "Новый пользователь", "Введите имя:", QLineEdit::Normal, "", &nameOk);
+
+                if (!nameOk) break; // Назад к выбору пользователя
+
+                if (newName.trimmed().isEmpty()) {
+                    QMessageBox::warning(this, "Ошибка", "Имя не может быть пустым.");
+                    continue;
+                }
+
+                if (userFiles.contains(newName)) {
+                    QMessageBox::warning(this, "Ошибка", "Пользователь с таким именем уже существует.");
+                    continue;
+                }
+
+                username = newName;
+                userSelected = true;
+                break;
+            }
+        } else {
+            username = selected;
+            userSelected = true;
+        }
     }
+
+
+
 
     user = new User(username);
     initUI();
@@ -72,6 +103,14 @@ void MainWindow::initUI() {
 
     updateStatusBar();
     updateStatus();
+    connect(ui->recordsButton, &QPushButton::clicked, this, [this]() {
+        if (!recordsWindow) {
+            recordsWindow = new RecordsWindow(this);
+        }
+        recordsWindow->show();
+        recordsWindow->raise();
+        recordsWindow->activateWindow();
+    });
 }
 
 
@@ -197,6 +236,15 @@ void MainWindow::onTrainingFinished(int charactersTyped, int timeSpent, int erro
             .arg(user->getCompletedLevels())
             .arg(user->getAverageSpeed(), 0, 'f', 1)
         );
+    Record record;
+    record.username = user->getUsername();
+    record.level = ui->difficultyComboBox->currentText();
+    record.timeSeconds = timeSpentF;
+    record.charactersTyped = charactersTyped;
+    record.errorCount = errorCount;
+    record.speed = user->getAverageSpeed(); // или рассчитать прямо здесь
+
+    addRecord(record);
 
     updateStatus();
 }
@@ -221,3 +269,5 @@ void MainWindow::updateHighlightedReference() {
     ui->referenceLabel->setTextFormat(Qt::RichText);
     ui->referenceLabel->setText(html);
 }
+
+

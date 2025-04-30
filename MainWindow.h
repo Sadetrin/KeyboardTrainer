@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "Trainer.h"
 #include "User.h"
+#include "RecordsWindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class KeyboardTrainer; }
@@ -34,6 +35,7 @@ private:
     void updateHighlightedReference();
     QString lastValidInput;  // Последняя корректная строка
     bool inputBlocked = false;
+    RecordsWindow* recordsWindow = nullptr;
 
 };
 

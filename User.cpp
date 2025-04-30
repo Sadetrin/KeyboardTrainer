@@ -33,7 +33,9 @@ void User::saveToFile() const {
     QFile file(getFilePath());
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream out(&file);
-        out << username << "\n" << completedLevels << "\n" << averageSpeed << "\n";
+        out << "Имя: " << username << "\n";
+        out << "Завершено уровней: " << completedLevels << "\n";
+        out << "Средняя скорость: " << averageSpeed << "\n";
         file.close();
     }
 }

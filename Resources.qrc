@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/down_arrow.svg</file>
+        <file>icons/cross.svg</file>
+        <file>icons/clock.svg</file>
+        <file>icons/volume-off.svg</file>
+        <file>icons/volume-on.svg</file>
+        <file>icons/diagram.svg</file>
+        <file>icons/background.png</file>
+        <file>icons/app_icon.png</file>
+        <file>icons/user-add.svg</file>
+    </qresource>
+    <qresource prefix="/music">
+        <file>music/background.mp3</file>
+    </qresource>
+</RCC>

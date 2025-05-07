@@ -6,132 +6,506 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>932</width>
+    <height>666</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>932</width>
+    <height>666</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>KeyboardTrainer</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow {
+    background: url(:/icons/icons/background.png) center/cover no-repeat fixed;
+    font-family: &quot;Monotype Corsiva&quot;, cursive;
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="errorLabel">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>30</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>errors</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="timeLabel">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>30</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>time</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="progressLabel">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>30</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>progress</string>
-    </property>
-   </widget>
-   <widget class="MyLineEdit" name="inputField">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>140</y>
-      <width>751</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="startButton">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>190</y>
-      <width>80</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="referenceLabel">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>100</y>
-      <width>751</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Здесь будет текст&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="difficultyComboBox">
-    <property name="geometry">
-     <rect>
-      <x>670</x>
-      <y>20</y>
-      <width>121</width>
-      <height>41</height>
-     </rect>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>10</number>
     </property>
     <item>
-     <property name="text">
-      <string>Очень легко</string>
-     </property>
+     <widget class="QFrame" name="headerFrame">
+      <property name="styleSheet">
+       <string notr="true">QFrame {
+    border-bottom: 1px solid #EEEFF2;
+    padding: 10px;
+}</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="titleLabel">
+         <property name="styleSheet">
+          <string notr="true">QLabel {
+    color: #1C1D22;
+    font-size: 18px;
+    font-weight: bold;
+	font: 700 18pt &quot;Comic Sans MS&quot;;
+}</string>
+         </property>
+         <property name="text">
+          <string>KeyboardTrainer</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="muteButton">
+         <property name="minimumSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="sizeIncrement">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="recordsButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	font: 700 12pt &quot;Comic Sans MS&quot;;
+    min-width: 100px;
+    border-radius: 15px;
+    height: 35px;
+    background-color: #EEEFF2;
+    color: #1C1D22;
+    font-size: 14px;
+}</string>
+         </property>
+         <property name="text">
+          <string>Рекорды</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
     <item>
-     <property name="text">
-      <string>Легко</string>
-     </property>
+     <widget class="QWidget" name="statsWidget" native="true">
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QFrame" name="timeFrame">
+         <property name="styleSheet">
+          <string notr="true">QFrame {
+    border: 1px solid #D5D6DD;
+    border-radius: 8px;
+    padding: 10px;
+    background: white;
+}</string>
+         </property>
+         <widget class="QLabel" name="timeValue">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>61</width>
+            <height>36</height>
+           </rect>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LayoutDirection::LeftToRight</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font: 700 12pt &quot;Comic Sans MS&quot;;
+	font: 700 12pt &quot;Comic Sans MS&quot;;
+    color: #6B7280;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+QLabel#timeValue{
+border:none;
+}</string>
+          </property>
+          <property name="text">
+           <string>Время</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLabel" name="timeLabel">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>50</y>
+            <width>191</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font: 700 16pt &quot;Comic Sans MS&quot;;
+    color: #1C1D22;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+</string>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/icons/icons/clock.svg&quot; width=&quot;22&quot;/&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;  0.0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QFrame" name="errorsFrame">
+         <property name="styleSheet">
+          <string notr="true">QFrame {
+    border: 1px solid #D5D6DD;
+    border-radius: 8px;
+    padding: 10px;
+    background: white;
+}</string>
+         </property>
+         <widget class="QLabel" name="errorsValue">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>50</y>
+            <width>191</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font: 700 16pt &quot;Comic Sans MS&quot;;
+	font: 700 18pt &quot;Comic Sans MS&quot;;
+    color: #1C1D22;
+    font-size: 18px;
+    font-weight: bold;
+}</string>
+          </property>
+          <property name="text">
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Comic Sans MS'; font-size:16px; font-weight:700; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/icons/icons/cross.svg&quot; width=&quot;20&quot; /&gt;&lt;span style=&quot; font-family:'Segoe UI';&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'Segoe UI'; font-size:18pt;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="errorLabel">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>14</y>
+            <width>71</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font: 700 12pt &quot;Comic Sans MS&quot;;
+    color: #6B7280;
+    font-size: 12px;
+}
+
+QLabel#errorLabel{
+border:none;
+}</string>
+          </property>
+          <property name="text">
+           <string>Ошибки</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QFrame" name="progressFrame">
+         <property name="styleSheet">
+          <string notr="true">QFrame {
+    border: 1px solid #D5D6DD;
+    border-radius: 8px;
+    padding: 10px;
+    background: white;
+}</string>
+         </property>
+         <widget class="QLabel" name="progressLabel">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>83</width>
+            <height>36</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font: 700 12pt &quot;Comic Sans MS&quot;;
+    color: #6B7280;
+    font-size: 12px;
+}
+
+QLabel#progressLabel{
+border:none;
+}</string>
+          </property>
+          <property name="text">
+           <string>Прогресс</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLabel" name="progressValue">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>50</y>
+            <width>201</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font: 700 16pt &quot;Comic Sans MS&quot;;
+    color: #1C1D22;
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/icons/icons/diagram.svg&quot; width=&quot;20&quot;/&gt;&lt;span style=&quot; font-size:20pt;&quot;/&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  0%&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QFrame" name="difficultyFrame">
+         <property name="styleSheet">
+          <string notr="true">QFrame {
+    border: 1px solid #D5D6DD;
+    border-radius: 8px;
+    padding: 10px;
+    background: white;
+}</string>
+         </property>
+         <widget class="QLabel" name="difficultyLabel">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>91</width>
+            <height>36</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font: 700 12pt &quot;Comic Sans MS&quot;;
+    color: #6B7280;
+    font-size: 12px;
+}
+
+QLabel#difficultyLabel{
+border:none;
+}</string>
+          </property>
+          <property name="text">
+           <string>Сложность</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QComboBox" name="difficultyComboBox">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>50</y>
+            <width>201</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QComboBox {
+	font: 700 14pt &quot;Comic Sans MS&quot;;
+    color: #1C1D22;
+    font-size: 16px;
+    font-weight: bold;
+    border: 1px solid #D5D6DD;
+    border-radius: 8px;
+    background-color: white;
+	font: 700 16pt &quot;Comic Sans MS&quot;;
+    padding: 5px;
+    min-height: 30px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: right center;
+    width: 20px;
+    border-left: 1px solid #D5D6DD;
+}
+
+QComboBox::down-arrow {
+	image: url(:/icons/icons/down_arrow.svg);
+    width: 12px;
+    height: 12px;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid #D5D6DD;
+    border-radius: 8px;
+    background-color: white;
+    selection-background-color: #607AFB;
+    selection-color: white;
+    padding: 5px;
+    outline: none;
+}</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Очень легко</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Легко</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Средне</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Сложно</string>
+           </property>
+          </item>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
     <item>
-     <property name="text">
-      <string>Средне</string>
-     </property>
+     <widget class="QLabel" name="referenceLabel">
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+	font: 700 16pt &quot;Comic Sans MS&quot;;
+    border: 1px solid #D5D6DD;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    padding: 15px;
+    font-size: 16px;
+    color: #1C1D22;
+    min-height: 100px;
+    margin: 0 20px;
+}</string>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Press 'Start' to begin the typing exercise&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
     </item>
     <item>
-     <property name="text">
-      <string>Сложно</string>
-     </property>
+     <widget class="MyLineEdit" name="inputField">
+      <property name="styleSheet">
+       <string notr="true">MyLineEdit {
+    border: 1px solid #D5D6DD;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    padding: 12px;
+    font-size: 16px;
+    color: #1C1D22;
+	font: 700 16pt &quot;Comic Sans MS&quot;;
+    height: 40px;
+    margin: 0 20px;
+}
+
+MyLineEdit:placeholder {
+    color: #9CA3AF;
+}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>Пишите здесь...</string>
+      </property>
+     </widget>
     </item>
-   </widget>
-   <widget class="QPushButton" name="recordsButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>121</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>recordsButton</string>
-    </property>
-   </widget>
+    <item>
+     <widget class="QWidget" name="buttonsWidget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="startButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	font: 700 14pt &quot;Comic Sans MS&quot;;
+    min-width: 100px;
+    border-radius: 15px;
+    height: 35px;
+    background-color: #607AFB;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+}</string>
+         </property>
+         <property name="text">
+          <string>Start</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
@@ -139,7 +513,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>932</width>
      <height>21</height>
     </rect>
    </property>
@@ -149,8 +523,7 @@
   <customwidget>
    <class>MyLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>MyLineEdit.h
-</header>
+   <header>MyLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UserDialog</class>
+ <widget class="QDialog" name="UserDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>393</width>
+    <height>493</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>KeyboardTrainer</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: white;</string>
+  </property>
+  <widget class="QLabel" name="welcomeLabel">
+   <property name="geometry">
+    <rect>
+     <x>-10</x>
+     <y>90</y>
+     <width>400</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-size: 24px; color: #333333; font-family: Arial;
+font: 700 24pt &quot;Comic Sans MS&quot;;</string>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; color:#2c3e50;&quot;&gt;Добро пожаловать в&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="titleLabel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>120</y>
+     <width>400</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-size: 36px; font-weight: bold; color: #2c3e50; font-family: Arial;
+font: 700 30pt &quot;Comic Sans MS&quot;;</string>
+   </property>
+   <property name="text">
+    <string>KeyboardTrainer</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="continueButton">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>325</y>
+     <width>291</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+font: 700 9pt &quot;Comic Sans MS&quot;;
+font-size: 16px; 
+background-color: #3b82f6; 
+color: white; 
+font-weight: bold; 
+border-radius: 8px;    
+padding: 8px; border: none;
+}
+
+QPushButton:hover {
+        background-color: #2980b9;
+        cursor: pointer;
+    }
+</string>
+   </property>
+   <property name="text">
+    <string>Продолжить</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="createUserButton">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>380</y>
+     <width>291</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{font-size: 16px; background-color: white; color: #4b5563;
+    font-weight: normal; border-radius: 8px; 
+    padding: 8px; border: 1px solid #d1d5db;
+font: 700 10pt &quot;Comic Sans MS&quot;;
+
+}
+
+QPushButton:hover {
+        cursor: pointer;
+    }
+
+</string>
+   </property>
+   <property name="text">
+    <string>Создать нового пользователя</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="userComboBox">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>260</y>
+     <width>291</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"> QComboBox {
+        font-size: 14px;
+        
+	font: 700 9pt &quot;Comic Sans MS&quot;;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        padding: 5px 10px;
+        background: white;
+        selection-background-color: #e5e7eb;
+    }
+    QComboBox::drop-down {
+        subcontrol-origin: padding;
+        subcontrol-position: top right;
+        width: 30px;
+        border-left: 1px solid #d1d5db;
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+    }
+    QComboBox::down-arrow {
+       image: url(:/icons/icons/down_arrow.svg);
+        width: 12px;
+        height: 12px;
+    }
+    QComboBox QAbstractItemView {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 5px;
+        background: white;
+        selection-background-color: #3b82f6;
+        selection-color: white;
+    }</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>230</y>
+     <width>151</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <bold>true</bold>
+     <kerning>false</kerning>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:#0000;
+font: 700 10pt &quot;Comic Sans MS&quot;;</string>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Выбрать пользователя&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>170</y>
+     <width>241</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 10pt &quot;Comic Sans MS&quot;;</string>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;color:#000000;&quot;&gt;Совершенствуйте навыки печати&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

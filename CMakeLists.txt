@@ -9,71 +9,74 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia MultimediaWidgets)
 
 set(PROJECT_SOURCES
-        main.cpp
-        KeyboardTrainer.cpp
-        keyboardtrainer.h
-        KeyboardTrainer.ui
+    main.cpp
+
+    KeyboardTrainer.h
+    KeyboardTrainer.cpp
+    KeyboardTrainer.ui
+
+    DataManager.h
+    DataManager.cpp
+
+    Level.h
+    Level.cpp
+
+    Trainer.h
+    Trainer.cpp
+
+    User.h
+    User.cpp
+
+    MainWindow.h
+    MainWindow.cpp
+
+    MyLineEdit.h
+    MyLineEdit.cpp
+
+    Records.h
+    Records.cpp
+
+    RecordsWindow.h
+    RecordsWindow.cpp
+
+    resources.qrc
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(KeyboardTrainer
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        App.h app.cpp
-        App.cpp
-        DataManager.cpp
-        KeyboardTrainer.h KeyboardTrainer.cpp
-        Level.h Level.cpp
-        Trainer.h Trainer.cpp
-        TypingSession.h TypingSession.cpp
-        User.h User.cpp
+qt_add_executable(KeyboardTrainer
+    MANUAL_FINALIZATION
+    ${PROJECT_SOURCES}
+    UserDialog.h UserDialog.cpp
+    UserDialog.ui
 
-        DataManager.h
-        MainWindow.h MainWindow.cpp
-        words
-        MyLineEdit.h MyLineEdit.cpp
-        Records.h Records.cpp
-        RecordsWindow.h RecordsWindow.cpp
-        recordswindow.h recordswindow.cpp
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET KeyboardTrainer APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(KeyboardTrainer SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(KeyboardTrainer
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+)
 
-target_link_libraries(KeyboardTrainer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.KeyboardTrainer)
-endif()
+# Установка иконки (только для Windows)
+set(WIN32_ICON "${CMAKE_CURRENT_SOURCE_DIR}/icons/app_icon.ico")
 set_target_properties(KeyboardTrainer PROPERTIES
-    ${BUNDLE_ID_OPTION}
+    WIN32_EXECUTABLE TRUE
+    RC_ICONS "${WIN32_ICON}"
+)
+
+# Связывание с библиотеками Qt
+target_link_libraries(KeyboardTrainer PRIVATE
+    Qt6::Core
+    Qt6::Widgets
+    Qt6::Multimedia
+    Qt6::MultimediaWidgets
+)
+
+# Установка свойств для macOS (если нужно)
+set_target_properties(KeyboardTrainer PROPERTIES
+    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.KeyboardTrainer
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
 )
 
+# Установка
 include(GNUInstallDirs)
 install(TARGETS KeyboardTrainer
     BUNDLE DESTINATION .
@@ -81,6 +84,5 @@ install(TARGETS KeyboardTrainer
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(KeyboardTrainer)
-endif()
+# Финализация Qt6
+qt_finalize_executable(KeyboardTrainer)

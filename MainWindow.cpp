@@ -8,83 +8,199 @@
 #include <QFileInfoList>
 #include <QMessageBox>
 #include "recordswindow.h"
+#include "UserDialog.h"
 
 
-MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent),
-    ui(new Ui::KeyboardTrainer),
-    trainer(nullptr),
-    statusUpdateTimer(nullptr),
-    timerStarted(false)
+// bool MainWindow::getUserName(QString& outUsername)
+// {
+//     QStringList userFiles;
+//     QDir userDir("users");
+//     if (!userDir.exists()) {
+//         QDir().mkdir("users");
+//     }
+
+//     QFileInfoList fileList = userDir.entryInfoList(QStringList() << "*.dat", QDir::Files);
+//     for (const QFileInfo& fileInfo : fileList) {
+//         userFiles << fileInfo.baseName();
+//     }
+
+//     QStringList options;
+//     options << "Создать нового пользователя";
+//     options << userFiles;
+
+//     while (true) {
+//         bool ok;
+//         QString selected = QInputDialog::getItem(nullptr, "Выбор пользователя",
+//                                                  "Выберите пользователя:", options, 0, false, &ok);
+
+//         if (!ok) {
+//             QMessageBox::StandardButton confirm = QMessageBox::question(
+//                 nullptr,
+//                 "Подтверждение",
+//                 "Вы точно хотите выйти?",
+//                 QMessageBox::Yes | QMessageBox::No
+//                 );
+//             return (confirm == QMessageBox::Yes) ? false : getUserName(outUsername); // Рекурсия с подтверждением
+//         }
+
+//         if (selected == "Создать нового пользователя") {
+//             while (true) {
+//                 bool nameOk;
+//                 QString newName = QInputDialog::getText(nullptr, "Новый пользователь",
+//                                                         "Введите имя:", QLineEdit::Normal, "", &nameOk);
+
+//                 if (!nameOk) break; // Вернуться к выбору пользователя
+
+//                 newName = newName.trimmed().toLower();
+
+//                 if (newName.isEmpty()) {
+//                     QMessageBox::warning(nullptr, "Ошибка", "Имя не может быть пустым.");
+//                     continue;
+//                 }
+
+//                 if (userFiles.contains(newName)) {
+//                     QMessageBox::warning(nullptr, "Ошибка", "Пользователь с таким именем уже существует.");
+//                     continue;
+//                 }
+
+//                 outUsername = newName;
+//                 return true;
+//             }
+//         } else {
+//             outUsername = selected.trimmed().toLower();
+//             return true;
+//         }
+//     }
+// }
+
+
+
+bool MainWindow::getUserName(QString& outUsername)
 {
-    ui->setupUi(this);
-
-    QString username;
-
     QStringList userFiles;
     QDir userDir("users");
     if (!userDir.exists()) {
         QDir().mkdir("users");
     }
+
     QFileInfoList fileList = userDir.entryInfoList(QStringList() << "*.dat", QDir::Files);
     for (const QFileInfo& fileInfo : fileList) {
         userFiles << fileInfo.baseName();
     }
 
-    QStringList options;
-    options << "Создать нового пользователя";
-    options << userFiles;
+    while (true) {
+        UserDialog dialog(userFiles); // создаём диалог
+        int result = dialog.exec();
 
-    bool userSelected = false;
-    while (!userSelected) {
-        bool ok;
-        QString selected = QInputDialog::getItem(this, "Выбор пользователя", "Выберите пользователя:", options, 0, false, &ok);
-
-        if (!ok) {
-            QApplication::quit();
-            return; // Прерываем конструктор MainWindow
+        if (result == QDialog::Rejected) {
+            QMessageBox::StandardButton confirm = QMessageBox::question(
+                nullptr,
+                "Подтверждение",
+                "Вы точно хотите выйти?",
+                QMessageBox::Yes | QMessageBox::No
+                );
+            if (confirm == QMessageBox::Yes)
+                return false;
+            else
+                continue;
         }
 
-        if (selected == "Создать нового пользователя") {
-            QString newName;
-            bool nameOk;
-            while (true) {
-                newName = QInputDialog::getText(this, "Новый пользователь", "Введите имя:", QLineEdit::Normal, "", &nameOk);
-
-                if (!nameOk) break; // Назад к выбору пользователя
-
-                if (newName.trimmed().isEmpty()) {
-                    QMessageBox::warning(this, "Ошибка", "Имя не может быть пустым.");
-                    continue;
-                }
-
-                if (userFiles.contains(newName)) {
-                    QMessageBox::warning(this, "Ошибка", "Пользователь с таким именем уже существует.");
-                    continue;
-                }
-
-                username = newName;
-                userSelected = true;
-                break;
-            }
-        } else {
-            username = selected;
-            userSelected = true;
+        QString selected = dialog.getSelectedUser();
+        if (selected.isEmpty()) {
+            QMessageBox::warning(nullptr, "Ошибка", "Имя не может быть пустым.");
+            continue;
         }
+
+        outUsername = selected.trimmed().toLower();
+        return true;
+    }
+}
+
+
+MainWindow::MainWindow(const QString& username, QWidget* parent)
+    : QMainWindow(parent),
+    ui(new Ui::KeyboardTrainer),
+    trainer(nullptr),
+    user(new User(username)),
+    statusUpdateTimer(nullptr),
+    timerStarted(false),
+    recordsWindow(nullptr),
+    musicPlayer(nullptr),
+    audioOutput(nullptr)
+{
+    ui->setupUi(this);
+
+    //setFixedSize(size());
+    QApplication::setFont(QFont("Comic Sans MS", 12));
+
+    initUI();
+
+    ui->progressValue->setText("<html><img src=':/icons/icons/diagram.svg' width='20' style='vertical-align:middle;'> Выполнено: 0%</html>");
+    ui->progressValue->setTextFormat(Qt::RichText);
+    ui->errorsValue->setText("<html><img src=':/icons/icons/cross.svg' width='20' style='vertical-align:middle;'> Ошибки: 0</html>");
+    ui->errorsValue->setTextFormat(Qt::RichText);
+    ui->timeLabel->setText("<html><img src=':/icons/icons/clock.svg' width='20' style='vertical-align:middle;'> Время: 0.0 сек</html>");
+    ui->timeLabel->setTextFormat(Qt::RichText);
+    ui->referenceLabel->setText("<html><div style='color:gray;font-style:italic;'>Выберите сложность и нажмите 'Старт'</div></html>");
+    ui->referenceLabel->setTextFormat(Qt::RichText);
+
+    updateStatusBar();
+
+
+    musicPlayer = new QMediaPlayer(this);
+    audioOutput = new QAudioOutput(this);
+    musicPlayer->setAudioOutput(audioOutput);
+    audioOutput->setVolume(currentVolume); // Громкость от 0.0 до 1.0
+
+    musicPlayer->setSource(QUrl("qrc:/music/music/background.mp3"));
+    if (musicPlayer->mediaStatus() == QMediaPlayer::NoMedia) {
+        qDebug() << "Ошибка: музыкальный файл не найден!";
+    } else {
+        musicPlayer->play();
     }
 
+    connect(musicPlayer, &QMediaPlayer::mediaStatusChanged, this, [this](QMediaPlayer::MediaStatus status) {
+        if (status == QMediaPlayer::EndOfMedia) {
+            musicPlayer->setPosition(0);
+            musicPlayer->play();
+        }
+    });
+
+    connect(musicPlayer, &QMediaPlayer::errorOccurred, this, [this](QMediaPlayer::Error error) {
+        QString errorMsg;
+        switch (error) {
+        case QMediaPlayer::ResourceError: errorMsg = "Файл не найден"; break;
+        case QMediaPlayer::FormatError: errorMsg = "Неподдерживаемый формат"; break;
+        case QMediaPlayer::NetworkError: errorMsg = "Ошибка сети"; break;
+        default: errorMsg = "Неизвестная ошибка";
+        }
+        QMessageBox::critical(this, "Ошибка музыки", errorMsg);
+    });
 
 
+    soundOnIcon=QIcon(":/icons/icons/volume-on.svg");
+    soundOffIcon=QIcon(":/icons/icons/volume-off.svg");
 
-    user = new User(username);
-    initUI();
+    ui->muteButton->setIcon(soundOnIcon);  // Стартовая иконка
+    ui->muteButton->setIconSize(QSize(24, 24)); // Размер иконки
+    ui->muteButton->setStyleSheet(
+        "QPushButton { border: none; background: transparent; }"
+        "QPushButton:pressed { padding: 1px; }"
+        );
+
+    connect(ui->muteButton, &QPushButton::clicked, this, &MainWindow::onMuteButtonClicked);
+
 }
+
 
 MainWindow::~MainWindow() {
     delete ui;
     delete user;
     delete trainer;
     delete statusUpdateTimer;
+    delete musicPlayer;
+    delete audioOutput;
+    delete recordsWindow;
 }
 
 void MainWindow::initUI() {
@@ -100,6 +216,8 @@ void MainWindow::initUI() {
 
     statusUpdateTimer = new QTimer(this);
     connect(statusUpdateTimer, &QTimer::timeout, this, &MainWindow::updateStatus);
+
+
 
     updateStatusBar();
     updateStatus();
@@ -120,12 +238,24 @@ void MainWindow::updateStatus() {
         QString input = trainer->getUserInput();
         int percent = (text.isEmpty()) ? 0 : (input.length() * 100 / text.length());
 
-        ui->progressLabel->setText(QString("Выполнено: %1%").arg(percent));
-        ui->errorLabel->setText(QString("Ошибки: %1").arg(trainer->getErrorCount()));
-        ui->timeLabel->setText(QString("Время: %1 сек").arg(trainer->getElapsedTime(), 0, 'f', 1));
+        QString progressText = QString("Выполнено: %1%").arg(percent);
+        ui->progressValue->setText(
+            QString("<html><img src=':/icons/icons/diagram.svg' width='20' style='vertical-align:middle;'> %1</html>")
+                .arg(progressText)
+            );
+        ui->progressValue->setTextFormat(Qt::RichText);
+
+
+        QString errorsText = QString("Ошибки: %1").arg(trainer->getErrorCount());
+        ui->errorsValue->setText(QString("<html><img src=':/icons/icons/cross.svg' width='20' style='vertical-align:middle;'> %1</html>").arg(errorsText));
+        ui->errorsValue->setTextFormat(Qt::RichText);
+
+        QString timeText = QString("Время: %1 сек").arg(trainer->getElapsedTime(), 0, 'f', 1);
+        ui->timeLabel->setText(QString("<html><img src=':/icons/icons/clock.svg' width='22' style='vertical-align:middle;'> %1</html>").arg(timeText));
+        ui->timeLabel->setTextFormat(Qt::RichText);
     } else {
-        ui->progressLabel->clear();
-        ui->errorLabel->clear();
+        ui->progressValue->clear();
+        ui->errorsValue->clear();
         ui->timeLabel->clear();
     }
 }
@@ -242,7 +372,7 @@ void MainWindow::onTrainingFinished(int charactersTyped, int timeSpent, int erro
     record.timeSeconds = timeSpentF;
     record.charactersTyped = charactersTyped;
     record.errorCount = errorCount;
-    record.speed = user->getAverageSpeed(); // или рассчитать прямо здесь
+    record.speed = user->getAverageSpeed();
 
     addRecord(record);
 
@@ -270,4 +400,17 @@ void MainWindow::updateHighlightedReference() {
     ui->referenceLabel->setText(html);
 }
 
+
+void MainWindow::onMuteButtonClicked() {
+    isMuted = !isMuted;
+
+    if (isMuted) {
+        currentVolume=audioOutput->volume();
+        audioOutput->setVolume(0);
+        ui->muteButton->setIcon(soundOffIcon);
+    } else {
+        audioOutput->setVolume(currentVolume);
+        ui->muteButton->setIcon(soundOnIcon);
+    }
+}
 

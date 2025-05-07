@@ -1,14 +1,23 @@
-#include "MainWindow.h"  // вместо keyboardtrainer.h
-
+#include "MainWindow.h"
 #include <QApplication>
-#include <QTime>
-#include <QtGlobal>
+#include <QMessageBox>
+#include <QIcon>
+
 
 int main(int argc, char *argv[])
 {
-
     QApplication a(argc, argv);
-    MainWindow w;
+
+    a.setWindowIcon(QIcon(":/icons/icons/app_icon.png"));
+
+    // Сначала проверяем выбор пользователя ДО создания главного окна
+    QString username;
+    if (!MainWindow::getUserName(username)) {
+        return 0; // Пользователь отменил выбор
+    }
+
+    // Только после успешного выбора создаем главное окно
+    MainWindow w(username);
     w.show();
     return a.exec();
 }

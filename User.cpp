@@ -47,7 +47,17 @@ bool User::loadFromFile() {
     }
 
     QTextStream in(&file);
-    in >> username >> completedLevels >> averageSpeed;
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        if (line.startsWith("Имя:")) {
+            username = line.section(":", 1).trimmed();
+        } else if (line.startsWith("Завершено уровней:")) {
+            completedLevels = line.section(":", 1).trimmed().toInt();
+        } else if (line.startsWith("Средняя скорость:")) {
+            averageSpeed = line.section(":", 1).trimmed().toDouble();
+        }
+    }
+
     file.close();
     return true;
 }

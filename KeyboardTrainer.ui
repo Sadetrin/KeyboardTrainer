@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>932</width>
-    <height>666</height>
+    <width>1200</width>
+    <height>750</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>932</width>
-    <height>666</height>
+    <width>1200</width>
+    <height>750</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -418,12 +418,12 @@ QComboBox QAbstractItemView {
      <widget class="QLabel" name="referenceLabel">
       <property name="styleSheet">
        <string notr="true">QLabel {
-	font: 700 16pt &quot;Comic Sans MS&quot;;
+	font: 700 15pt &quot;Comic Sans MS&quot;;
     border: 1px solid #D5D6DD;
     border-radius: 8px;
     background-color: #FFFFFF;
     padding: 15px;
-    font-size: 16px;
+    font-size: 15px;
     color: #1C1D22;
     min-height: 100px;
     margin: 0 20px;
@@ -471,6 +471,26 @@ MyLineEdit:placeholder {
         <number>10</number>
        </property>
        <item>
+        <widget class="QPushButton" name="quitButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	font: 700 14pt &quot;Comic Sans MS&quot;;
+    min-width: 100px;
+    border-radius: 15px;
+    height: 35px;
+    background-color: #DC143C;
+    color: #FFFFFF;
+	color: rgb(255, 255, 255);
+    font-size: 14px;
+    font-weight: bold;
+}</string>
+         </property>
+         <property name="text">
+          <string>Выйти</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer_2">
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
@@ -498,7 +518,7 @@ MyLineEdit:placeholder {
 }</string>
          </property>
          <property name="text">
-          <string>Start</string>
+          <string>Старт</string>
          </property>
         </widget>
        </item>
@@ -513,7 +533,7 @@ MyLineEdit:placeholder {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>932</width>
+     <width>1200</width>
      <height>21</height>
     </rect>
    </property>

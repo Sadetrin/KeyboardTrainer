@@ -26,6 +26,7 @@ private slots:
     void onCharacterInput();
     void onTrainingFinished(int charactersTyped, int timeSpent, int errorCount);
     void onMuteButtonClicked();
+    void onQuitButtonClicked();
 
 private:
     Ui::KeyboardTrainer* ui;

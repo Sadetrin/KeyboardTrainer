@@ -1,15 +1,24 @@
 #include "Trainer.h"
+#include <QMessageBox>
 
 Trainer::Trainer(User* user, QObject* parent)
     : QObject(parent), errorCount(0), user(user) {}
 
 void Trainer::startTraining(Level::Difficulty difficulty) {
+    try{
     Level level(difficulty);
     currentText = level.getText();
+
+    if(currentText.isEmpty() || currentText=="Ошибка загрузки текста."){
+        throw std::runtime_error("Не удалось загрузить текст для тренировки");
+    }
     userInput.clear();
     errorCount = 0;
     errorIndices.clear();
     timer.invalidate();
+    }catch(const std::exception& e){
+        throw;
+    }
 }
 
 void Trainer::inputCharacter(QChar c) {

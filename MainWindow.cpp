@@ -11,107 +11,63 @@
 #include "UserDialog.h"
 
 
-// bool MainWindow::getUserName(QString& outUsername)
-// {
-//     QStringList userFiles;
-//     QDir userDir("users");
-//     if (!userDir.exists()) {
-//         QDir().mkdir("users");
-//     }
-
-//     QFileInfoList fileList = userDir.entryInfoList(QStringList() << "*.dat", QDir::Files);
-//     for (const QFileInfo& fileInfo : fileList) {
-//         userFiles << fileInfo.baseName();
-//     }
-
-//     QStringList options;
-//     options << "Создать нового пользователя";
-//     options << userFiles;
-
-//     while (true) {
-//         bool ok;
-//         QString selected = QInputDialog::getItem(nullptr, "Выбор пользователя",
-//                                                  "Выберите пользователя:", options, 0, false, &ok);
-
-//         if (!ok) {
-//             QMessageBox::StandardButton confirm = QMessageBox::question(
-//                 nullptr,
-//                 "Подтверждение",
-//                 "Вы точно хотите выйти?",
-//                 QMessageBox::Yes | QMessageBox::No
-//                 );
-//             return (confirm == QMessageBox::Yes) ? false : getUserName(outUsername); // Рекурсия с подтверждением
-//         }
-
-//         if (selected == "Создать нового пользователя") {
-//             while (true) {
-//                 bool nameOk;
-//                 QString newName = QInputDialog::getText(nullptr, "Новый пользователь",
-//                                                         "Введите имя:", QLineEdit::Normal, "", &nameOk);
-
-//                 if (!nameOk) break; // Вернуться к выбору пользователя
-
-//                 newName = newName.trimmed().toLower();
-
-//                 if (newName.isEmpty()) {
-//                     QMessageBox::warning(nullptr, "Ошибка", "Имя не может быть пустым.");
-//                     continue;
-//                 }
-
-//                 if (userFiles.contains(newName)) {
-//                     QMessageBox::warning(nullptr, "Ошибка", "Пользователь с таким именем уже существует.");
-//                     continue;
-//                 }
-
-//                 outUsername = newName;
-//                 return true;
-//             }
-//         } else {
-//             outUsername = selected.trimmed().toLower();
-//             return true;
-//         }
-//     }
-// }
-
-
-
 bool MainWindow::getUserName(QString& outUsername)
 {
-    QStringList userFiles;
     QDir userDir("users");
     if (!userDir.exists()) {
         QDir().mkdir("users");
     }
 
+    QStringList userFiles;
     QFileInfoList fileList = userDir.entryInfoList(QStringList() << "*.dat", QDir::Files);
     for (const QFileInfo& fileInfo : fileList) {
         userFiles << fileInfo.baseName();
     }
 
     while (true) {
-        UserDialog dialog(userFiles); // создаём диалог
-        int result = dialog.exec();
-
-        if (result == QDialog::Rejected) {
-            QMessageBox::StandardButton confirm = QMessageBox::question(
-                nullptr,
-                "Подтверждение",
-                "Вы точно хотите выйти?",
-                QMessageBox::Yes | QMessageBox::No
-                );
-            if (confirm == QMessageBox::Yes)
+        UserDialog dialog(userFiles);  // диалог выбора или ввода имени
+        if (dialog.exec() == QDialog::Rejected) {
+            if (QMessageBox::question(nullptr, "Выход", "Точно выйти?",
+                                      QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
                 return false;
-            else
-                continue;
-        }
-
-        QString selected = dialog.getSelectedUser();
-        if (selected.isEmpty()) {
-            QMessageBox::warning(nullptr, "Ошибка", "Имя не может быть пустым.");
             continue;
         }
 
-        outUsername = selected.trimmed().toLower();
+        QString inputName = dialog.getSelectedUser().trimmed();
+        bool isNewUser = dialog.isNewUser();
+
+        // Проверка: имя пустое
+        if (inputName.isEmpty()) {
+            QMessageBox::warning(nullptr, "Ошибка", "Имя не может быть пустым!");
+            continue;
+        }
+
+        // Проверка: пробелы в имени
+        if (inputName.contains(' ')) {
+            QMessageBox::warning(nullptr, "Ошибка",
+                                 "Имя не может содержать пробелы!\n"
+                                 "Используйте подчеркивание (_) вместо пробелов.");
+            continue;
+        }
+
+        // Проверка: недопустимые символы
+        QRegularExpression validPattern("^[\\wа-яА-Я]+$");
+        if (!validPattern.match(inputName).hasMatch()) {
+            QMessageBox::warning(nullptr, "Ошибка",
+                                 "Недопустимые символы в имени!\n"
+                                 "Разрешены только буквы, цифры и подчеркивание.");
+            continue;
+        }
+
+        // Проверка: имя уже существует
+        if (isNewUser && userFiles.contains(inputName, Qt::CaseInsensitive)) {
+            QMessageBox::warning(nullptr, "Ошибка",
+                                 "Пользователь с таким именем уже существует!\n"
+                                 "Введите другое имя.");
+            continue;
+        }
+
+        outUsername = inputName;
         return true;
     }
 }
@@ -206,6 +162,7 @@ MainWindow::~MainWindow() {
 void MainWindow::initUI() {
     connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::onStartTraining);
     connect(ui->inputField, &QLineEdit::textChanged, this, &MainWindow::onCharacterInput);
+    connect(ui->quitButton, &QPushButton::clicked, this, &MainWindow::onQuitButtonClicked);
 
     // Заполнение уровней сложности
     ui->difficultyComboBox->clear();
@@ -276,6 +233,8 @@ void MainWindow::onStartTraining() {
     Level::Difficulty difficulty = Level::Medium;
     QString levelText = ui->difficultyComboBox->currentText();
 
+    try
+    {
     if (levelText == "Очень легко") difficulty = Level::VeryEasy;
     else if (levelText == "Легко") difficulty = Level::Easy;
     else if (levelText == "Средне") difficulty = Level::Medium;
@@ -295,6 +254,17 @@ void MainWindow::onStartTraining() {
     updateStatusBar();
     updateHighlightedReference();
     lastValidInput.clear();
+    }catch (const std::runtime_error& e){
+        QMessageBox::critical(this, "Ошибка запуска тренировки",
+                              QString("Не удалось начать тренировку:\n%1\n\nПроверьте файлы уровней в папке resources/")
+                                  .arg(e.what()));
+
+        QCoreApplication::quit();
+
+        // ui->startButton->setEnabled(false);
+        // ui->difficultyComboBox->setEnabled(false);
+        // ui->inputField->setEnabled(false);
+    }
 }
 
 
@@ -411,6 +381,15 @@ void MainWindow::onMuteButtonClicked() {
     } else {
         audioOutput->setVolume(currentVolume);
         ui->muteButton->setIcon(soundOnIcon);
+    }
+}
+
+
+void MainWindow::onQuitButtonClicked() {
+    if (QMessageBox::question(this, "Подтверждение выхода",
+                              "Вы уверены, что хотите выйти из программы?",
+                              QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+        QApplication::quit();
     }
 }
 

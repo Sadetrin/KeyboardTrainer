@@ -31,28 +31,26 @@ QString UserDialog::getSelectedUser() const {
 }
 
 void UserDialog::onCreateNewClicked() {
-    while (true) {
-        bool ok;
-        QString name = QInputDialog::getText(this, "Новый пользователь", "Введите имя:",
-                                             QLineEdit::Normal, "", &ok);
+    bool ok;
+    QString name = QInputDialog::getText(this,
+                                         "Новый пользователь",
+                                         "Введите имя пользователя (мин. 3 символа):",
+                                         QLineEdit::Normal, "", &ok);
 
-        if (!ok) return; // Пользователь нажал "Отмена", вернуться к выбору
+    name=name.trimmed().toLower();
 
-        name = name.trimmed().toLower();
-
+    if (ok) {
         if (name.isEmpty()) {
             QMessageBox::warning(this, "Ошибка", "Имя не может быть пустым.");
-            continue;
+            return;
         }
-
-        if (existingUsers.contains(name)) {
-            QMessageBox::warning(this, "Ошибка", "Пользователь с таким именем уже существует.");
-            continue;
+        if (name.length() < 3) {
+            QMessageBox::warning(this, "Ошибка", "Имя должно содержать минимум 3 символа.");
+            return;
         }
-
         selectedUser = name;
+        isNewUserFlag = true;
         accept();
-        return;
     }
 }
 
@@ -61,6 +59,7 @@ void UserDialog::onAccept() {
 
     if (!name.isEmpty()) {
         selectedUser = name;
+        isNewUserFlag = false;
         accept();
     } else {
         QMessageBox::warning(this, "Ошибка", "Выберите пользователя или создайте нового.");
@@ -73,4 +72,9 @@ void UserDialog::reject() {
     if (res == QMessageBox::Yes)
         QDialog::reject();
     // Иначе остаёмся в диалоге
+}
+
+
+bool UserDialog::isNewUser() const {
+    return isNewUserFlag;
 }

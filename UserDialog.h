@@ -16,6 +16,7 @@ public:
     ~UserDialog();
 
     QString getSelectedUser() const;
+    bool isNewUser() const;
 
 protected:
     void reject() override; // Обработка закрытия диалога с подтверждением
@@ -28,6 +29,7 @@ private:
     Ui::UserDialog *ui;
     QString selectedUser;
     QStringList existingUsers;
+    bool isNewUserFlag = false;
 };
 
 #endif // USERDIALOG_H

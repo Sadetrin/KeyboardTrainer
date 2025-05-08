@@ -3,6 +3,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QRandomGenerator>
+#include <stdexcept>
 
 Level::Level(Difficulty difficulty) {
     text = getTextForDifficulty(difficulty);
@@ -25,13 +26,14 @@ QString Level::getTextForDifficulty(Difficulty difficulty) {
         fileName = "resources/long_sentences.txt";
         break;
     default:
-        return "Уровень не определён.";
+        throw std::runtime_error("Неизвестный уровень сложности");
     }
 
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Не удалось открыть файл:" << fileName;
-        return "Ошибка загрузки текста.";
+        QString errorMsg = QString("Не удалось открыть файл уровня сложности: %1").arg(fileName);
+        qCritical() << errorMsg;
+        throw std::runtime_error(errorMsg.toStdString());
     }
 
     QTextStream in(&file);
@@ -45,7 +47,9 @@ QString Level::getTextForDifficulty(Difficulty difficulty) {
     file.close();
 
     if (lines.isEmpty()) {
-        return "Файл пуст или содержит некорректные данные.";
+        QString errorMsg = QString("Файл уровня сложности пуст: %1").arg(fileName);
+        qCritical() << errorMsg;
+        throw std::runtime_error(errorMsg.toStdString());
     }
 
     switch (difficulty) {
@@ -77,7 +81,7 @@ QString Level::getTextForDifficulty(Difficulty difficulty) {
     }
 
     default:
-        return "Уровень не определён.";
+        throw std::runtime_error("Неизвестный уровень сложности");
     }
 
 

@@ -13,4 +13,10 @@
     <qresource prefix="/music">
         <file>music/background.mp3</file>
     </qresource>
+    <qresource prefix="/resources">
+        <file>resources/letters.txt</file>
+        <file>resources/long_sentences.txt</file>
+        <file>resources/sentences.txt</file>
+        <file>resources/words.txt</file>
+    </qresource>
 </RCC>

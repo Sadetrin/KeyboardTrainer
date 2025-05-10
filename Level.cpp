@@ -14,16 +14,16 @@ QString Level::getTextForDifficulty(Difficulty difficulty) {
 
     switch (difficulty) {
     case VeryEasy:
-        fileName = "resources/letters.txt";
+        fileName = ":/resources/resources/letters.txt";
         break;
     case Easy:
-        fileName = "resources/words.txt";
+        fileName = ":/resources/resources/words.txt";
         break;
     case Medium:
-        fileName = "resources/sentences.txt";
+        fileName = ":/resources/resources/sentences.txt";
         break;
     case Hard:
-        fileName = "resources/long_sentences.txt";
+        fileName = ":/resources/resources/long_sentences.txt";
         break;
     default:
         throw std::runtime_error("Неизвестный уровень сложности");

@@ -54,11 +54,12 @@ qt_add_executable(KeyboardTrainer
 )
 
 # Установка иконки (только для Windows)
-set(WIN32_ICON "${CMAKE_CURRENT_SOURCE_DIR}/icons/app_icon.ico")
-set_target_properties(KeyboardTrainer PROPERTIES
-    WIN32_EXECUTABLE TRUE
-    RC_ICONS "${WIN32_ICON}"
-)
+if(WIN32)
+    set(APP_ICON_RESOURCE "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.rc")
+    target_sources(KeyboardTrainer PRIVATE ${APP_ICON_RESOURCE})
+    set_target_properties(KeyboardTrainer PROPERTIES WIN32_EXECUTABLE TRUE)
+endif()
+
 
 # Связывание с библиотеками Qt
 target_link_libraries(KeyboardTrainer PRIVATE

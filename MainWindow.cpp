@@ -72,7 +72,6 @@ bool MainWindow::getUserName(QString& outUsername)
     }
 }
 
-
 MainWindow::MainWindow(const QString& username, QWidget* parent)
     : QMainWindow(parent),
     ui(new Ui::KeyboardTrainer),
@@ -314,8 +313,6 @@ void MainWindow::onCharacterInput() {
     updateStatus();
     updateHighlightedReference();
 }
-
-
 
 
 void MainWindow::onTrainingFinished(int charactersTyped, int timeSpent, int errorCount) {

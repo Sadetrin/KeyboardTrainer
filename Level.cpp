@@ -72,7 +72,7 @@ QString Level::getTextForDifficulty(Difficulty difficulty) {
 
     case Medium: {
         std::shuffle(lines.begin(), lines.end(), *QRandomGenerator::global());
-        return lines.mid(0, 2).join(" ");
+        return lines.mid(0, 1).join(" ");
     }
 
     case Hard: {

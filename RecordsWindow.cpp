@@ -9,7 +9,7 @@ RecordsWindow::RecordsWindow(QWidget* parent)
     : QDialog(parent), table(new QTableWidget(this)) {
 
     setWindowTitle("Таблица рекордов");
-    resize(500, 400);
+    resize(700, 500);
 
     setupTable();
 
@@ -28,6 +28,8 @@ void RecordsWindow::setupTable() {
     table->setSelectionMode(QAbstractItemView::NoSelection);
     table->verticalHeader()->setVisible(false);
     table->setSortingEnabled(true);
+    table->setColumnWidth(1, 200);
+    table->setColumnWidth(2, 250);
 
 }
 

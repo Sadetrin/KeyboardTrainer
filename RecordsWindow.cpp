@@ -30,6 +30,7 @@ void RecordsWindow::setupTable() {
     table->setSortingEnabled(true);
     table->setColumnWidth(1, 200);
     table->setColumnWidth(2, 250);
+    table->setColumnWidth(0,150);
 
 }
 

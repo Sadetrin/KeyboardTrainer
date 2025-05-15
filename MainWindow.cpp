@@ -25,7 +25,7 @@ bool MainWindow::getUserName(QString& outUsername)
     }
 
     while (true) {
-        UserDialog dialog(userFiles);  // диалог выбора или ввода имени
+        UserDialog dialog(userFiles);
         if (dialog.exec() == QDialog::Rejected) {
             if (QMessageBox::question(nullptr, "Выход", "Точно выйти?",
                                       QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
@@ -36,13 +36,13 @@ bool MainWindow::getUserName(QString& outUsername)
         QString inputName = dialog.getSelectedUser().trimmed();
         bool isNewUser = dialog.isNewUser();
 
-        // Проверка: имя пустое
+        // проверка: имя пустое
         if (inputName.isEmpty()) {
             QMessageBox::warning(nullptr, "Ошибка", "Имя не может быть пустым!");
             continue;
         }
 
-        // Проверка: пробелы в имени
+        // проверка: пробелы в имени
         if (inputName.contains(' ')) {
             QMessageBox::warning(nullptr, "Ошибка",
                                  "Имя не может содержать пробелы!\n"
@@ -50,7 +50,7 @@ bool MainWindow::getUserName(QString& outUsername)
             continue;
         }
 
-        // Проверка: недопустимые символы
+        // проверка: недопустимые символы
         QRegularExpression validPattern("^[\\wа-яА-Я]+$");
         if (!validPattern.match(inputName).hasMatch()) {
             QMessageBox::warning(nullptr, "Ошибка",
@@ -59,7 +59,7 @@ bool MainWindow::getUserName(QString& outUsername)
             continue;
         }
 
-        // Проверка: имя уже существует
+        // проверка: имя уже существует
         if (isNewUser && userFiles.contains(inputName, Qt::CaseInsensitive)) {
             QMessageBox::warning(nullptr, "Ошибка",
                                  "Пользователь с таким именем уже существует!\n"

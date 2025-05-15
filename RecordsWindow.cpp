@@ -9,7 +9,8 @@ RecordsWindow::RecordsWindow(QWidget* parent)
     : QDialog(parent), table(new QTableWidget(this)) {
 
     setWindowTitle("Таблица рекордов");
-    resize(700, 500);
+    resize(750, 500);
+    this->setMinimumSize(size());
 
     setupTable();
 
@@ -23,7 +24,7 @@ RecordsWindow::RecordsWindow(QWidget* parent)
 void RecordsWindow::setupTable() {
     table->setColumnCount(3);
     table->setHorizontalHeaderLabels({ "Имя", "Завершено уровней", "Средняя скорость (сим/мин)" });
-    table->horizontalHeader()->setStretchLastSection(true);
+    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
     table->setSelectionMode(QAbstractItemView::NoSelection);
     table->verticalHeader()->setVisible(false);
